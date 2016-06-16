@@ -1,3 +1,5 @@
+.idea
+*.iml
 .eunit
 deps
 *.o
@@ -5,6 +7,10 @@ deps
 *.plt
 erl_crash.dump
 ebin
-rel/example_project
+rel/hello_erlang_rump
 .concrete/DEV_MODE
 .rebar
+.rumprun_packages_built
+.rumprun_tuple
+build
+log
