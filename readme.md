@@ -51,9 +51,9 @@ before installing anything else.
 
     sudo apt-get update
 
-In case you prefer the GNU GCC compler then install g++ and openssl
+In case you prefer the GNU GCC compler then install g++ and openssl dev.
 
-    sudo apt-get install -y g++ openssl-dev
+    sudo apt-get install -y g++ libssl-dev
 
 ### CentOS / Fedora / Redhat
 
