@@ -16,6 +16,12 @@
 LOCAL_PATH=$(shell pwd)
 BUILT_ERL_BIN_PATH=$(LOCAL_PATH)/build/rumprun-packages/erlang/build/bin
 
+ifeq ($(shell uname),Darwin)
+RUMPRUN_GENISOIMAGE=hdiutil makehybrid -iso
+else
+RUMPRUN_GENISOIMAGE=genisoimage -l -r
+endif
+
 
 .PHONY: setup_rumprun build_rumprun build_rumprun_packages
 
@@ -50,3 +56,14 @@ build/rumprun-packages/config.mk: build/rumprun-packages .rumprun_tuple
 	PATH=$(LOCAL_PATH)/build/rumprun/rumprun/bin:$$PATH make; \
 	PATH=$(LOCAL_PATH)/build/rumprun/rumprun/bin:$$PATH make beam.hw.bin)
 	touch .rumprun_packages_built
+
+
+app.iso: compile
+	mkdir -p build/app-modules
+	cp deps/*/ebin/* build/app-modules/
+	cp ebin/* build/app-modules/
+	cp build/rumprun-packages/erlang/examples/setnodename/*.beam build/app-modules/
+	$(RUMPRUN_GENISOIMAGE) -o app.iso build/app-modules/
+
+erlrun.sh: build_rumprun_packages
+	cp build/rumprun-packages/erlang/erlrun.sh .
