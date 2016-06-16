@@ -1,0 +1,52 @@
+# Copyright (c) 2016, Neeraj Sharma <neeraj.sharma@alumni.iitg.ernet.in>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+
+LOCAL_PATH=$(shell pwd)
+BUILT_ERL_BIN_PATH=$(LOCAL_PATH)/build/rumprun-packages/erlang/build/bin
+
+
+.PHONY: setup_rumprun build_rumprun build_rumprun_packages
+
+setup_rumprun: build_rumprun build_rumprun_packages
+
+build_rumprun: .rumprun_tuple
+
+build/rumprun:
+	mkdir -p build
+	(cd build; \
+	git clone http://repo.rumpkernel.org/rumprun; \
+	cd rumprun; \
+	git submodule update --init)
+
+.rumprun_tuple: build/rumprun
+	(cd build/rumprun; \
+	CC=cc ./build-rr.sh hw)
+	ls build/rumprun/rumprun/bin/*-gcc | rev | cut -f 1 -d'/' | cut -f2- -d'-' | rev > .rumprun_tuple
+
+build_rumprun_packages: .rumprun_packages_built
+
+build/rumprun-packages:
+	(cd build; git clone http://repo.rumpkernel.org/rumprun-packages)
+
+build/rumprun-packages/config.mk: build/rumprun-packages .rumprun_tuple
+	(cd build/rumprun-packages; \
+	sed -e "s/RUMPRUN_TOOLCHAIN_TUPLE=.*/RUMPRUN_TOOLCHAIN_TUPLE=$(shell cat .rumprun_tuple)/g" config.mk.dist > config.mk)
+	
+
+.rumprun_packages_built: build/rumprun-packages/config.mk
+	(cd build/rumprun-packages/erlang; \
+	PATH=$(LOCAL_PATH)/build/rumprun/rumprun/bin:$$PATH make; \
+	PATH=$(LOCAL_PATH)/build/rumprun/rumprun/bin:$$PATH make beam.hw.bin)
+	touch .rumprun_packages_built
