@@ -39,7 +39,7 @@ init({tcp, http}, _Req, _Opts) ->
 
 
 -spec(handle(Req :: term(), State :: term()) ->
-  {ok, Req2 :: term(), State :: term()}).
+  {ok, Req :: term(), State :: term()}).
 handle(Req, State) ->
   lager:debug("Request not expected: ~p", [Req]),
   {ok, Req2} = cowboy_http_req:reply(404, [{'Content-Type', <<"text/html">>}]),
