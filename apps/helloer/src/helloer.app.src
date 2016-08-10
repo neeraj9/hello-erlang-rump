@@ -31,5 +31,10 @@
     syntax_tools
   ]},
   {mod, {helloer_app, []}},
-  {env, []}
+  {env, []},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
 ]}.

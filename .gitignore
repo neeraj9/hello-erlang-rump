@@ -1,15 +1,13 @@
 .idea
 *.iml
 .eunit
-deps
 *.o
 *.beam
 *.plt
 erl_crash.dump
-ebin
+_build
 rel/hello_erlang_rump
 .concrete/DEV_MODE
-.rebar
 .rumprun_packages_built
 .rumprun_tuple
 build
