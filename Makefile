@@ -14,7 +14,7 @@
 
 NAME=helloer
 
-.PHONY: all compile get-deps clean
+.PHONY: all compile get-deps clean create-rel
 
 all: setup_rumprun compile
 
@@ -30,4 +30,12 @@ get-deps:
 clean:
 	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar clean
 
+# create release structure as per the rebar release handling
+# see https://github.com/rebar/rebar/wiki/Release-handling
+# for more details.
+create-rel: rel
+	(cd rel && ../rebar create-node nodeid=$(NAME))
 
+
+rel:
+	mkdir rel
