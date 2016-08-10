@@ -14,32 +14,15 @@
 
 NAME=helloer
 
-.PHONY: all compile get-deps clean create-rel generate
+.PHONY: all compile clean
 
 all: setup_rumprun compile
 
 # Important: include after defining rule "all"
 include Makefile.rumprun
 
-compile: get-deps
-	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar compile
-
-generate:
-	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar generate
-
-get-deps:
-	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar get-deps
+compile:
+	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar3 compile
 
 clean:
-	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar clean
-
-# create release structure as per the rebar release handling
-# see https://github.com/rebar/rebar/wiki/Release-handling
-# for more details.
-create-rel: rel
-	(cd rel && \
-	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ../rebar create-node nodeid=$(NAME))
-
-
-rel:
-	mkdir rel
+	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar3 clean
