@@ -14,7 +14,7 @@
 
 NAME=helloer
 
-.PHONY: all compile clean
+.PHONY: all compile clean release prod
 
 all: setup_rumprun compile release prod
 
