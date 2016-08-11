@@ -25,6 +25,7 @@
   {applications, [
     kernel,
     stdlib,
+    sasl,
     cowboy,
     compiler,
     lager,

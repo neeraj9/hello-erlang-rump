@@ -14,7 +14,12 @@
 
 
 LOCAL_PATH=$(shell pwd)
-BUILT_ERL_BIN_PATH=$(LOCAL_PATH)/build/rumprun-packages/erlang/build/bin
+# prefix with local path in search path so that the "erl" application
+# is used by rebar3 (via escript found in host_erlangdist/usr/local/bin)
+# is from this path instead.
+# This will allow running same erlang application on host as the
+# one built for target for maximum consistency.
+BUILT_ERL_BIN_PATH=$(LOCAL_PATH):$(LOCAL_PATH)/build/rumprun-packages/erlang/build/host_erlangdist/usr/local/bin
 
 ifeq ($(shell uname),Darwin)
 RUMPRUN_GENISOIMAGE=hdiutil makehybrid -iso
