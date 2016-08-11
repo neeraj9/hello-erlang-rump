@@ -20,7 +20,7 @@
 %%%-------------------------------------------------------------------
 {application, helloer, [
   {description, "Hello Erlang Microkernel powered by Rumprun unikernel."},
-  {vsn, "1"},
+  {vsn, "0.1.0"},
   {registered, []},
   {applications, [
     kernel,

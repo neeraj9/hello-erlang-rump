@@ -16,7 +16,7 @@ NAME=helloer
 
 .PHONY: all compile clean
 
-all: setup_rumprun compile
+all: setup_rumprun compile release prod
 
 # Important: include after defining rule "all"
 include Makefile.rumprun
@@ -26,3 +26,11 @@ compile:
 
 clean:
 	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar3 clean
+
+# for dev mode
+release:
+	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar3 release
+
+# production tar file which can be deployed directly
+prod:
+	PATH=$(BUILT_ERL_BIN_PATH):$$PATH ./rebar3 as prod tar
