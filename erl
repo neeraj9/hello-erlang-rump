@@ -31,7 +31,13 @@
 # 
 # %CopyrightEnd%
 #
+
+SCRIPT=$(readlink $0 || true)
+if [ -z $SCRIPT ]; then
+  SCRIPT=$0
+fi;
 MYDIR="$(cd `dirname "$SCRIPT"` && pwd -P)"
+
 ROOTDIR="${MYDIR}/build/rumprun-packages/erlang/build/host_erlangdist/usr/local/lib/erlang"
 BINDIR=$ROOTDIR/erts-7.3.1/bin
 EMU=beam
