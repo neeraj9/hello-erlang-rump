@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Update by Neeraj Sharma for running custom host erl
 # so that rebar3 can use this script instead of the
@@ -31,7 +31,7 @@
 # 
 # %CopyrightEnd%
 #
-MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+MYDIR="$(cd `dirname "$SCRIPT"` && pwd -P)"
 ROOTDIR="${MYDIR}/build/rumprun-packages/erlang/build/host_erlangdist/usr/local/lib/erlang"
 BINDIR=$ROOTDIR/erts-7.3.1/bin
 EMU=beam
