@@ -26,13 +26,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# The makefile including this must define the following for build to
-# succeed.
-#
-# * PKGNAME  - name of the application as understood by Erlang/OTP.
-# * PKGVSN   - the version of the application built for production.
-
-
 LOCAL_PATH=$(shell pwd)
 # prefix with local path in search path so that the "erl" application
 # is used by rebar3 (via escript found in host_erlangdist/usr/local/bin)
@@ -42,13 +35,6 @@ LOCAL_PATH=$(shell pwd)
 BUILT_ERL_BIN_PATH=$(LOCAL_PATH):$(LOCAL_PATH)/build/rumprun-packages/erlang/build/host_erlangdist/usr/local/bin
 
 ERLANG_BASE_META_PATH=$(LOCAL_PATH)/build/rumprun-packages/erlang
-
-ifeq ($(shell uname),Darwin)
-RUMPRUN_GENISOIMAGE=hdiutil makehybrid -iso
-else
-RUMPRUN_GENISOIMAGE=genisoimage -l -r
-endif
-
 
 .PHONY: setup_rumprun build_rumprun build_rumprun_packages
 
@@ -84,25 +70,3 @@ build/rumprun-packages/config.mk: build/rumprun-packages .rumprun_tuple
 	PATH=$(LOCAL_PATH)/build/rumprun/rumprun/bin:$$PATH make beam.hw.bin)
 	touch .rumprun_packages_built
 
-
-erlang.iso: prod
-	mkdir -p _deployed/lib/erlang
-	(cd _deployed/lib/erlang; \
-	 tar -xzf ../../../_build/prod/rel/$(PKGNAME)/$(PKGNAME)-$(PKGVSN).tar.gz)
-	# copy the start.boot from application to its default location
-	# where the beam vm expects it.
-	(cd _deployed/lib/erlang/bin; \
-	 rm start.boot; \
-	 ln -s ../releases/$(PKGVSN)/start.boot start.boot)
-	# copy meta information for base erlang config
-	cp $(ERLANG_BASE_META_PATH)/erl_inetrc _deployed/
-	cp $(ERLANG_BASE_META_PATH)/hosts.template _deployed/hosts
-	cp $(ERLANG_BASE_META_PATH)/resolv.conf.template _deployed/resolv.conf
-	# setnodename is required for clustering
-	mkdir -p _deployed/lib/erlang/lib/setnodename-0.0.1/ebin
-	cp build/rumprun-packages/erlang/examples/setnodename/*.beam _deployed/lib/erlang/lib/setnodename-0.0.1/ebin
-	$(RUMPRUN_GENISOIMAGE) -o erlang.iso _deployed/
-
-
-erlrun.sh: build_rumprun_packages
-	cp build/rumprun-packages/erlang/erlrun.sh .
