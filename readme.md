@@ -102,6 +102,7 @@ pretty straight-forward (see below).
     cd hello-erlang-rump
     make
 
+> The build will automatically build the Erlang application unikernel.
 
 ## Thanks
 
