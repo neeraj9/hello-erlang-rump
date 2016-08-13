@@ -26,26 +26,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# The pkg name and vsn must be set for Makefile.ukernel
-PKGNAME=helloer
-PKGVSN=0.1.0
+MICROKERNELS = helloer-0.1.0.iso
 
-.PHONY: all pkgiso
+.PHONY: all
 
-all: setup_rumprun compile release prod pkgiso
-
-# Important: include after defining rule "all"
-
-# Makefile.ukernel provides: setup_rumprun $(PKGNAME)-$(PKGVSN).iso
-include Makefile.ukernel
-
-# use the custom path so that Makefile.app uses the
-# erlang installation from built location rather
-# than the system default.
-export PATH := $(BUILT_ERL_BIN_PATH):$(PATH)
-
-# Makefile.app provides: compile release prod
-include Makefile.app
+SRC_DEPS = $(shell find apps)
+SRC_DEPS += $(shell find config)
+SRC_DEPS += rebar.config
 
 
-pkgiso: $(PKGNAME)-$(PKGVSN).iso
+all: $(MICROKERNELS)
+
+
+helloer-0.1.0.iso: .rumprun_packages_built $(SRC_DEPS)
+	$(MAKE) -f Makefile.gen PKGNAME=helloer PKGVSN=0.1.0 SRC_DEPS="$(SRC_DEPS)"

@@ -27,6 +27,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # must be the first thing to do
+# Makefile.rumprun provides: .rumprun_packages_built
 include Makefile.rumprun
 
 # The makefile including this must define the following for build to
@@ -42,20 +43,20 @@ RUMPRUN_GENISOIMAGE=genisoimage -l -r
 endif
 
 
-$(PKGNAME)-$(PKGVSN).iso: prod
-	mkdir -p _deployed/lib/erlang
-	(cd _deployed/lib/erlang; \
+$(PKGNAME)-$(PKGVSN).iso: .rumprun_packages_built _build/prod/rel/$(PKGNAME)/$(PKGNAME)-$(PKGVSN).tar.gz
+	mkdir -p _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang
+	(cd _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang; \
 	 tar -xzf ../../../_build/prod/rel/$(PKGNAME)/$(PKGNAME)-$(PKGVSN).tar.gz)
 	# copy the start.boot from application to its default location
 	# where the beam vm expects it.
-	(cd _deployed/lib/erlang/bin; \
+	(cd _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang/bin; \
 	 rm start.boot; \
 	 ln -s ../releases/$(PKGVSN)/start.boot start.boot)
 	# copy meta information for base erlang config
-	cp $(ERLANG_BASE_META_PATH)/erl_inetrc _deployed/
-	cp $(ERLANG_BASE_META_PATH)/hosts.template _deployed/hosts
-	cp $(ERLANG_BASE_META_PATH)/resolv.conf.template _deployed/resolv.conf
+	cp $(ERLANG_BASE_META_PATH)/erl_inetrc _deployed-$(PKGNAME)-$(PKGVSN)/
+	cp $(ERLANG_BASE_META_PATH)/hosts.template _deployed-$(PKGNAME)-$(PKGVSN)/hosts
+	cp $(ERLANG_BASE_META_PATH)/resolv.conf.template _deployed-$(PKGNAME)-$(PKGVSN)/resolv.conf
 	# setnodename is required for clustering
-	mkdir -p _deployed/lib/erlang/lib/setnodename-0.0.1/ebin
-	cp build/rumprun-packages/erlang/examples/setnodename/*.beam _deployed/lib/erlang/lib/setnodename-0.0.1/ebin
-	$(RUMPRUN_GENISOIMAGE) -o $(PKGNAME)-$(PKGVSN).iso _deployed/
+	mkdir -p _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang/lib/setnodename-0.0.1/ebin
+	cp build/rumprun-packages/erlang/examples/setnodename/*.beam _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang/lib/setnodename-0.0.1/ebin
+	$(RUMPRUN_GENISOIMAGE) -o $(PKGNAME)-$(PKGVSN).iso _deployed-$(PKGNAME)-$(PKGVSN)/

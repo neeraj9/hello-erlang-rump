@@ -26,39 +26,24 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-LOCAL_PATH=$(shell pwd)
-# prefix with local path in search path so that the "erl" application
-# is used by rebar3 (via escript found in host_erlangdist/usr/local/bin)
-# is from this path instead.
-# This will allow running same erlang application on host as the
-# one built for target for maximum consistency.
-BUILT_ERL_BIN_PATH=$(LOCAL_PATH):$(LOCAL_PATH)/build/rumprun-packages/erlang/build/host_erlangdist/usr/local/bin
+# The pkg name and vsn must be set for Makefile.ukernel
+# These are provided by calling Makefile
+#PKGNAME=
+#PKGVSN=
 
-ERLANG_BASE_META_PATH=$(LOCAL_PATH)/build/rumprun-packages/erlang
 
-build/rumprun:
-	mkdir -p build
-	(cd build; \
-	git clone http://repo.rumpkernel.org/rumprun; \
-	cd rumprun; \
-	git submodule update --init)
+.PHONY: all
 
-.rumprun_tuple: build/rumprun
-	(cd build/rumprun; \
-	CC=cc ./build-rr.sh hw)
-	ls build/rumprun/rumprun/bin/*-gcc | rev | cut -f 1 -d'/' | cut -f2- -d'-' | rev > .rumprun_tuple
+all: $(PKGNAME)-$(PKGVSN).iso
 
-build/rumprun-packages:
-	(cd build; git clone http://repo.rumpkernel.org/rumprun-packages)
+# Important: include after defining rule "all"
 
-build/rumprun-packages/config.mk: build/rumprun-packages .rumprun_tuple
-	(cd build/rumprun-packages; \
-	sed -e "s/RUMPRUN_TOOLCHAIN_TUPLE=.*/RUMPRUN_TOOLCHAIN_TUPLE=$(shell cat .rumprun_tuple)/g" config.mk.dist > config.mk)
-	
+# Makefile.ukernel provides: $(PKGNAME)-$(PKGVSN).iso
+include Makefile.ukernel
 
-.rumprun_packages_built: build/rumprun-packages/config.mk
-	(cd build/rumprun-packages/erlang; \
-	PATH=$(LOCAL_PATH)/build/rumprun/rumprun/bin:$$PATH make; \
-	PATH=$(LOCAL_PATH)/build/rumprun/rumprun/bin:$$PATH make beam.hw.bin)
-	touch .rumprun_packages_built
-
+# use the custom path (PATH) so that Makefile.app uses the
+# erlang installation from built location rather
+# than the system default.
+# Makefile.app provides: compile release prod
+_build/prod/rel/$(PKGNAME)/$(PKGNAME)-$(PKGVSN).tar.gz: .rumprun_packages_built $(SRC_DEPS)
+	PATH=$(BUILT_ERL_BIN_PATH):$$PATH $(MAKE) -f Makefile.app prod

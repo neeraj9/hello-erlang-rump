@@ -6,7 +6,7 @@
 *.plt
 erl_crash.dump
 _build
-_deployed
+_deployed-*
 .concrete/DEV_MODE
 .rumprun_packages_built
 .rumprun_tuple
