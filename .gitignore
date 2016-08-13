@@ -10,5 +10,6 @@ _deployed
 .concrete/DEV_MODE
 .rumprun_packages_built
 .rumprun_tuple
+._app_compiled
 build
 log
