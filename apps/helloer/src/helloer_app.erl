@@ -62,11 +62,15 @@
   {ok, pid(), State :: term()} |
   {error, Reason :: term()}).
 start(_StartType, _StartArgs) ->
+  lager:info("starting helloer application."),
+  PrivDir = code:priv_dir(helloer),
+  % use this instead for running in non-standard way
+  %PrivDir = "priv",
   Dispatch = cowboy_router:compile([
     {'_', [
       %%{"/", cowboy_static, {priv_file, helloer, "index.html"}},
-      {"/static/[...]", cowboy_static, {dir, "priv/static"}},
-      {"/", cowboy_static, {file, "priv/index.html"}},
+      {"/static/[...]", cowboy_static, {dir, PrivDir ++ "/static"}},
+      {"/", cowboy_static, {file, PrivDir ++ "/index.html"}},
       {"/ws", helloer_ws_handler, []}
     ]}
   ]),
