@@ -45,7 +45,7 @@ build/rumprun:
 
 .rumprun_tuple: build/rumprun
 	(cd build/rumprun; \
-	CC=cc ./build-rr.sh hw)
+	CC=cc ./build-rr.sh hw > rumrun-build.log 2>&1)
 	ls build/rumprun/rumprun/bin/*-gcc | rev | cut -f 1 -d'/' | cut -f2- -d'-' | rev > .rumprun_tuple
 
 build/rumprun-packages:
