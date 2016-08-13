@@ -1,7 +1,7 @@
 # Hello Erlang Rump
 
 [![Build Status](https://travis-ci.org/neeraj9/hello-erlang-rump.svg?branch=master)](https://travis-ci.org/neeraj9/hello-erlang-rump)
-[![Software License](https://img.shields.io/badge/license-ISC-blue.svg?style=flat-square)](LICENSE)
+[![Software License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg?style=flat-square)](http://opensource.org/licenses/BSD-3-Clause)
 
 Say hello to Erlang Microkernel powered by Rumprun unikernel. This project
 is apart from many things an example of running Erlang microkernel powered
