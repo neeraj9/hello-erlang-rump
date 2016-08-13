@@ -43,7 +43,8 @@
     cowboy,
     compiler,
     lager,
-    syntax_tools
+    syntax_tools,
+    jsx
   ]},
   {mod, {helloer_app, []}},
   {env, []},
