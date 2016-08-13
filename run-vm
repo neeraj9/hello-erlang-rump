@@ -73,6 +73,7 @@ main() {
     epmd_conf="-s erlpmd_ctl start -s setnodename start $name@$ip $cookie"
   }
 
+  # use "-mode embedded" for initial loading of all the modules (non-default)
   rumprun "$virt" \
      -I if,vioif,'-net tap,script=no,ifname=tap0' \
      -W if,inet,static,"$ip/24","$gw" \
@@ -84,6 +85,7 @@ main() {
        "-- $epmd_opt -root $erlpath/lib/erlang \
         -progname erl -- \
         -home $erlhome -noshell \
+        -mode embedded \
         $epmd_conf"
 }
 
