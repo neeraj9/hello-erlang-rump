@@ -36,6 +36,10 @@
 -author("nsharma").
 
 %% API
+% This interface is used for non-standard testing where
+% manual loading is required. For standard test
+% environment or production this function is never
+% invoked.
 -export([start/0]).
 
 -spec(start() ->
