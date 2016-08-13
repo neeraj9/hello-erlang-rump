@@ -11,7 +11,7 @@ before_install:
   - echo $LC_ALL
   - echo $TRAVIS_JOB_ID
   - sudo apt-get -qq update
-  - sudo apt-get install -y openssl openssl-dev wget
+  - sudo apt-get install -y openssl libssl-dev wget
 script:
   - make
 branches:
