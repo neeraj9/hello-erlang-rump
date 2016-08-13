@@ -19,6 +19,7 @@ Usage: "${0##*/}" [-h] ...
     --epmd         Enable Epmd. Requires the following options:
     --cookie       Set a specific cookie. (Default: mycookie)
     --name         Set a different name. (Default: rumprun)
+    --iso          Set an iso filename.
 
 EOF
 }
@@ -33,6 +34,7 @@ main() {
   local virt=qemu
   local epmd_opt=-no_epmd
   local epmd_conf=
+  local iso=
 
   local OPTIND=1 # Reset is necessary if getopts was used previously
   while getopts "h-:" opt; do
@@ -50,6 +52,7 @@ main() {
           epmd)          epmd_opt=''                ;;
           cookie=*)      cookie="${OPTARG#*=}"      ;;
           name=*)        name="${OPTARG#*=}"        ;;
+          iso=*)         iso="${OPTARG#*=}"         ;;
           *) show_help
             exit 1
           ;;
@@ -60,6 +63,11 @@ main() {
     esac
   done
 
+  if [[ -z "$iso" ]];
+  then
+    echo "Missing mandatory option --iso"
+    exit 1
+  fi
 
   [[ -z "$epmd_opt" ]] && {
     epmd_conf="-s erlpmd_ctl start -s setnodename start $name@$ip $cookie"
@@ -69,7 +77,7 @@ main() {
      -I if,vioif,'-net tap,script=no,ifname=tap0' \
      -W if,inet,static,"$ip/24","$gw" \
      -e ERL_INETRC="$erlpath/erl_inetrc" \
-     -b erlang.iso,"$erlpath" \
+     -b ${iso},"$erlpath" \
      -M 256 \
      -g '-serial file:serial.log -nographic -vga none' \
      -i build/rumprun-packages/erlang/beam.hw.bin \
