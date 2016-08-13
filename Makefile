@@ -38,5 +38,5 @@ SRC_DEPS += rebar.config
 all: $(MICROKERNELS)
 
 
-helloer-0.1.0.iso: .rumprun_packages_built $(SRC_DEPS)
+helloer-0.1.0.iso:
 	$(MAKE) -f Makefile.gen PKGNAME=helloer PKGVSN=0.1.0 SRC_DEPS="$(SRC_DEPS)"
