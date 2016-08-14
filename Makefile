@@ -29,11 +29,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 MICROKERNELS = \
- helloer-0.1.0.iso \
- uclimate-0.1.0.iso
+ helloer \
+ uclimate
 
 
-.PHONY: all
+.PHONY: all $(MICROKERNELS)
 
 SRC_DEPS = $(shell find apps)
 SRC_DEPS += $(shell find config)
@@ -43,8 +43,13 @@ SRC_DEPS += rebar.config
 all: $(MICROKERNELS)
 
 
-helloer-0.1.0.iso:
-	$(MAKE) -f Makefile.gen PKGNAME=helloer PKGVSN=0.1.0 SRC_DEPS="$(SRC_DEPS)"
+helloer: helloer-0.1.0.iso
 
-uclimate-0.1.0.iso:
-	$(MAKE) -f Makefile.gen PKGNAME=uclimate PKGVSN=0.1.0 SRC_DEPS="$(SRC_DEPS)"
+uclimate: uclimate-0.1.0.iso
+
+
+%.iso:
+	name=$(shell echo $@ | rev | cut -f2- -d'-' | rev); \
+	vsn=$(shell echo $@ | rev | cut -f1 -d'-' | cut -f2- -d'.' | rev); \
+	$(MAKE) -f Makefile.gen PKGNAME=$$name PKGVSN=$$vsn \
+		SRC_DEPS="$(SRC_DEPS)"
