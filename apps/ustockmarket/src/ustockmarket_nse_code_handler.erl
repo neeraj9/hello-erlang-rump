@@ -34,23 +34,46 @@
 %%% (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 %%% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %%%-------------------------------------------------------------------
-{application, ustockmarket, [
-  {description, "ustockmarket an Erlang stockmarket Service."},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {applications, [
-    kernel,
-    stdlib,
-    cowboy,
-    compiler,
-    lager,
-    syntax_tools
-  ]},
-  {mod, {ustockmarket_app, []}},
-  {env, []},
-  {modules, []},
+-module(ustockmarket_nse_code_handler).
+-author("nsharma").
 
-  {maintainers, []},
-  {licenses, []},
-  {links, []}
-]}.
+%% API
+
+%% Standard callbacks
+-export([init/2]).
+-export([allowed_methods/2]).
+-export([content_types_provided/2]).
+
+%% Custom callbacks
+-export([json_text/2]).
+
+
+init(Req, Opts) ->
+  {cowboy_rest, Req, Opts}.
+
+allowed_methods(Req, State) ->
+  {[<<"GET">>], Req, State}.
+
+content_types_provided(Req, State) ->
+  {[
+    {<<"application/json">>, json_text}
+  ], Req, State}.
+
+%% Need text to search within the
+%% request otherwise this API will fail and the process will
+%% crash, so cowboy will return HTTP/1.1 500 Internal Server Error.
+%% TODO the HTTP 500 error code is inappropriate for errors
+%% where the user provided incorrect URL or missing options.
+%% Instead return bad request http code.
+-spec(json_text(Req :: term(), State :: term()) ->
+  {ResponseBody :: string(), Req :: term(), State :: term()}).
+json_text(Req, State) ->
+  Response = gen_server:call(
+    quandl_nse_stock_proxy, {stock_code}),
+  case Response of
+    {ok, Value} ->
+      ResponseBody = Value;
+    {error, _} ->
+      ResponseBody = <<"{}">>
+  end,
+  {ResponseBody, Req, State}.
