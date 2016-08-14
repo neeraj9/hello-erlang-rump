@@ -32,7 +32,8 @@ MICROKERNELS = \
  helloer \
  uclimate \
  ustockmarket \
- uwiki
+ uwiki \
+ uworldtime
 
 
 .PHONY: all $(MICROKERNELS)
@@ -52,6 +53,8 @@ uclimate: uclimate-0.1.0.iso
 ustockmarket: ustockmarket-0.1.0.iso
 
 uwiki: uwiki-0.1.0.iso
+
+uworldtime: uworldtime-0.1.0.iso
 
 
 %.iso:
