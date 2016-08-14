@@ -49,8 +49,12 @@ build/rumprun:
 	tail -400 rumprun-build.log)
 	ls build/rumprun/rumprun/bin/*-gcc | rev | cut -f 1 -d'/' | cut -f2- -d'-' | rev > .rumprun_tuple
 
+# build/rumprun and build/rumprun-packages could run
+# in parallel so create build directory anyways
 build/rumprun-packages:
-	(cd build; git clone http://repo.rumpkernel.org/rumprun-packages)
+	(mkdir -p build; \
+	 cd build; \
+	 git clone http://repo.rumpkernel.org/rumprun-packages)
 
 build/rumprun-packages/config.mk: build/rumprun-packages .rumprun_tuple
 	(cd build/rumprun-packages; \
