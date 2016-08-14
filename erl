@@ -3,7 +3,7 @@
 # Update by Neeraj Sharma for running custom host erl
 # so that rebar3 can use this script instead of the
 # one available in host_erlangdist which will not
-# run since that points to /usr/local/lib/erlang/.
+# run since that points to /opt/erlang/lib/erlang/.
 # The other approach is to use erl from
 #   build/rumprun-packages/erlang/build/bin
 # but that is the raw build area of erlang, so
