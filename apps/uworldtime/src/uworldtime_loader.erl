@@ -34,23 +34,28 @@
 %%% (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 %%% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %%%-------------------------------------------------------------------
-{application, uworldtime, [
-  {description, "uWorldtime an Erlang worldtime Service."},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {applications, [
-    kernel,
-    stdlib,
-    cowboy,
-    compiler,
-    lager,
-    syntax_tools
-  ]},
-  {mod, {uworldtime_app, []}},
-  {env, []},
-  {modules, []},
+-module(uworldtime_loader).
+-author("nsharma").
 
-  {maintainers, []},
-  {licenses, []},
-  {links, []}
- ]}.
+%% API
+-export([start/0]).
+
+-spec(start() ->
+  ok).
+start() ->
+  application:start(syntax_tools),
+  application:start(compiler),
+  %% crypto is required by cowboy and must be started
+  %% irrespective of whether https is used or not
+  application:start(crypto),
+  application:start(goldrush),
+  application:start(lager),
+  application:start(ranch),
+  application:start(cowlib),
+  application:start(cowboy),
+  % for issuing httpc:request(Url)
+  application:start(inets),
+  % for starting ssl so that httpc can issue https requests
+  ssl:start(),
+  application:start(uworldtime),
+  ok.

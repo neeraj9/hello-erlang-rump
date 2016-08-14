@@ -34,23 +34,65 @@
 %%% (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 %%% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %%%-------------------------------------------------------------------
-{application, uworldtime, [
-  {description, "uWorldtime an Erlang worldtime Service."},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {applications, [
-    kernel,
-    stdlib,
-    cowboy,
-    compiler,
-    lager,
-    syntax_tools
-  ]},
-  {mod, {uworldtime_app, []}},
-  {env, []},
-  {modules, []},
+-module(uworldtime_time_handler).
+-author("nsharma").
 
-  {maintainers, []},
-  {licenses, []},
-  {links, []}
- ]}.
+%% API
+
+%% Standard callbacks
+-export([init/2]).
+-export([allowed_methods/2]).
+-export([content_types_provided/2]).
+
+%% Custom callbacks
+-export([json_text/2]).
+
+
+init(Req, Opts) ->
+  {cowboy_rest, Req, Opts}.
+
+allowed_methods(Req, State) ->
+  {[<<"GET">>], Req, State}.
+
+content_types_provided(Req, State) ->
+  {[
+    {<<"application/json">>, json_text}
+  ], Req, State}.
+
+%% Need geo latitude and longitude to get local time within the
+%% request otherwise this API will fail and the process will
+%% crash, so cowboy will return HTTP/1.1 500 Internal Server Error.
+%% TODO the HTTP 500 error code is inappropriate for errors
+%% where the user provided incorrect URL or missing options.
+%% Instead return bad request http code.
+-spec(json_text(Req :: term(), State :: term()) ->
+  {ResponseBody :: string(), Req :: term(), State :: term()}).
+json_text(Req, State) ->
+  #{lat:=LatVal, lon:=LongVal} =
+    cowboy_req:match_qs([lat, lon], Req),
+  % lets try to convert them for validation rather than pass
+  % to third-party site as-is and fail there unnecessarily.
+  GeoLat = safe_binary_to_float(LatVal),
+  GeoLong = safe_binary_to_float(LongVal),
+  Response = gen_server:call(
+    googlemaps_proxy, {timezone, GeoLat, GeoLong}),
+  case Response of
+    {ok, Value} ->
+      ResponseBody = Value;
+    {error, _} ->
+      ResponseBody = <<"{}">>
+  end,
+  {ResponseBody, Req, State}.
+
+safe_binary_to_float(Bin) ->
+  NumString = binary_to_list(Bin),
+  case string:to_float(NumString) of
+    {error, no_float} ->
+      case string:to_integer(NumString) of
+        {error, no_integer} ->
+          error;
+        % convert integer to float
+        {IntVal, _Rest} -> IntVal / 1.0
+      end;
+    {Val, _Rest} -> Val
+  end.
