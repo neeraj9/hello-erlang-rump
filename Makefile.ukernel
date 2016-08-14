@@ -50,7 +50,7 @@ $(PKGNAME)-$(PKGVSN).iso: .rumprun_packages_built _build/prod/rel/$(PKGNAME)/$(P
 	# copy the start.boot from application to its default location
 	# where the beam vm expects it.
 	(cd _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang/bin; \
-	 rm start.boot; \
+	 rm -f start.boot; \
 	 ln -s ../releases/$(PKGVSN)/start.boot start.boot)
 	# copy meta information for base erlang config
 	cp $(ERLANG_BASE_META_PATH)/erl_inetrc _deployed-$(PKGNAME)-$(PKGVSN)/
