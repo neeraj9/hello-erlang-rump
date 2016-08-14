@@ -48,4 +48,4 @@ include Makefile.ukernel
 # than the system default.
 # Makefile.app provides: compile release prod
 _build/prod/rel/$(PKGNAME)/$(PKGNAME)-$(PKGVSN).tar.gz: .rumprun_packages_built $(SRC_DEPS)
-	PATH=$(BUILT_ERL_BIN_PATH):$$PATH $(MAKE) -f Makefile.app prod
+	PATH=$(BUILT_ERL_BIN_PATH):$$PATH $(MAKE) -f Makefile.app PKGNAME=$(PKGNAME) prod

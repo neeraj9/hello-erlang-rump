@@ -28,6 +28,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# The PKGNAME must be defined for release and prod targets
 
 .PHONY: compile release prod clean
 
@@ -40,11 +41,11 @@ compile: ._app_compiled
 
 # for dev mode
 release: ._app_compiled
-	$(REBAR) release
+	$(REBAR) release -n $(PKGNAME)
 
 # production tar file which can be deployed directly
 prod: ._app_compiled
-	$(REBAR) as prod tar
+	$(REBAR) as prod tar -n $(PKGNAME)
 
 clean:
 	$(REBAR) clean

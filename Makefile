@@ -28,7 +28,10 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-MICROKERNELS = helloer-0.1.0.iso
+MICROKERNELS = \
+ helloer-0.1.0.iso \
+ uclimate-0.1.0.iso
+
 
 .PHONY: all
 
@@ -42,3 +45,6 @@ all: $(MICROKERNELS)
 
 helloer-0.1.0.iso:
 	$(MAKE) -f Makefile.gen PKGNAME=helloer PKGVSN=0.1.0 SRC_DEPS="$(SRC_DEPS)"
+
+uclimate-0.1.0.iso:
+	$(MAKE) -f Makefile.gen PKGNAME=uclimate PKGVSN=0.1.0 SRC_DEPS="$(SRC_DEPS)"
