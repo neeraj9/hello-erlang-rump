@@ -47,5 +47,10 @@
     syntax_tools
   ]},
   {mod, {uwiki_app, []}},
-  {env, []}
+  {env, []},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
 ]}.
