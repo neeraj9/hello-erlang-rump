@@ -9,7 +9,7 @@ and not completely tested.
 
 ## Dependencies and Development Environment
 
-This is documented in detail at [project readme](../readme.md).
+This is documented in detail at [project readme](../../readme.md).
 
 ## Motivation
 
