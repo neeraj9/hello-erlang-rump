@@ -36,7 +36,7 @@
 %%%-------------------------------------------------------------------
 {application, uclimate, [
   {description, "uClimate an Erlang Climate Service."},
-  {vsn, "1"},
+  {vsn, "0.1.0"},
   {registered, []},
   {applications, [
     kernel,
@@ -47,5 +47,10 @@
     syntax_tools
   ]},
   {mod, {uclimate_app, []}},
-  {env, []}
+  {env, []},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
 ]}.
