@@ -31,7 +31,9 @@
 
 REBAR ?= ./rebar3
 
-compile:
+compile: ._app_compiled
+
+._app_compiled:
 	$(REBAR) compile && touch ._app_compiled
 
 # for dev mode
