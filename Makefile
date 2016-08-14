@@ -31,6 +31,7 @@
 MICROKERNELS = \
  helloer \
  uclimate \
+ ustockmarket \
  uwiki
 
 
@@ -47,6 +48,8 @@ all: $(MICROKERNELS)
 helloer: helloer-0.1.0.iso
 
 uclimate: uclimate-0.1.0.iso
+
+ustockmarket: ustockmarket-0.1.0.iso
 
 uwiki: uwiki-0.1.0.iso
 
