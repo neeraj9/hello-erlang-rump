@@ -55,9 +55,9 @@ $(PKGNAME)-$(PKGVSN).iso: .rumprun_packages_built _build/prod/rel/$(PKGNAME)/$(P
 	 rm -f start.boot; \
 	 ln -s ../releases/$(PKGVSN)/start.boot start.boot)
 	# copy meta information for base erlang config
-	cp $(ERLANG_BASE_META_PATH)/erl_inetrc _deployed-$(PKGNAME)-$(PKGVSN)/
-	cp $(ERLANG_BASE_META_PATH)/hosts.template _deployed-$(PKGNAME)-$(PKGVSN)/hosts
-	cp $(ERLANG_BASE_META_PATH)/resolv.conf.template _deployed-$(PKGNAME)-$(PKGVSN)/resolv.conf
+	cp $(ERLANG_BASE_META_PATH)/build/erlangdist/opt/erlang/erl_inetrc _deployed-$(PKGNAME)-$(PKGVSN)/
+	cp $(ERLANG_BASE_META_PATH)/build/erlangdist/opt/erlang/hosts _deployed-$(PKGNAME)-$(PKGVSN)/hosts
+	cp $(ERLANG_BASE_META_PATH)/build/erlangdist/opt/erlang/resolv.conf _deployed-$(PKGNAME)-$(PKGVSN)/resolv.conf
 	# setnodename is required for clustering
 	mkdir -p _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang/lib/setnodename-0.0.1/ebin
 	cp build/rumprun-packages/erlang/examples/setnodename/*.beam _deployed-$(PKGNAME)-$(PKGVSN)/lib/erlang/lib/setnodename-0.0.1/ebin
