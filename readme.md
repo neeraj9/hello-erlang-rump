@@ -104,6 +104,29 @@ pretty straight-forward (see below).
 
 > The build will automatically build the Erlang application unikernel.
 
+Enable tap0 interface and enable ip address to it as follows:
+
+    sudo ip tuntap add tap0 mode tap
+    sudo ip addr add 10.0.120.100/24 dev tap0
+    sudo ip link set dev tap0 up
+
+Now you can run the Erlang microkernel as follows (in this case helloer app):
+
+    PATH=$(pwd)/build/rumprun/rumprun/bin:$PATH ./run-vm --virt=kvm --iso=helloer-0.1.0.iso
+
+Alternatively, if you dont have kvm but just qemu then do the following:
+
+    PATH=$(pwd)/build/rumprun/rumprun/bin:$PATH ./run-vm --iso=helloer-0.1.0.iso
+
+The output will stream to serial.log, so open another window and monitor that
+as follows:
+
+    tail -f serial.log
+
+> There is a substantial difference when running the unikernel in kvm (much
+> faster) than simple qemu. Although, qemu does run things reasonably well
+> but just slower.
+
 ## Thanks
 
 Thanks for evaluating this project and hope you find it useful.
